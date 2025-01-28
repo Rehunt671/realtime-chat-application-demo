@@ -1,11 +1,23 @@
 "use client";
 import { useWebSocket } from "@/hooks/useWebsocket";
+import { setUser } from "@/stores/slices/userSlice";
+import { redirect } from "next/navigation";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import Stomp from "stompjs";
 
 const JoinPage: React.FC = () => {
-  const { connect } = useWebSocket();
+  const dispatch = useDispatch();
+  const { sendMessage ,subscribe  } = useWebSocket()
   const [username, setUsername] = useState<string>("");
   const [error, setError] = useState<string>("");
+
+  const onUserConnected = (payload: Stomp.Message) => {
+    const userObject = JSON.parse(payload.body);
+    console.log("userObject", userObject);
+    dispatch(setUser(userObject));
+    redirect("/chatroom");
+  };
 
   const handleJoin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -14,7 +26,12 @@ const JoinPage: React.FC = () => {
     } else {
       setError("");
       try {
-        connect(username);
+        sendMessage(`/chat/addUser`, {
+            sender: username,
+            message: `${username} has joined the chat!`,
+            type: "JOIN",
+          });
+        subscribe(`/user/${username}/topic/user`, onUserConnected);
       } catch (error) {
         setError("Join failed. Please try again.");
       }

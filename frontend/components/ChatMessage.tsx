@@ -13,30 +13,20 @@ const ChatMessageCard: React.FC<ChatMessageProps> = ({ msg }) => {
 
   const renderMessageContent = () => {
     switch (msg.type) {
-      case "CREATE":
-        return (
-          <span className="text-blue-600 font-semibold text-center">
-            {msg.text}
-          </span>
-        );
-      case "ENTER":
-        return <span className="text-green-600 text-center">{msg.text}</span>;
       case "JOIN":
         return (
-          <span className="text-indigo-600 text-center">
+          <span className="text-indigo-600 text-center text-lg">
             {msg.sender + " has joined the chat"}.
           </span>
         );
       case "CHAT":
-        return <span className="text-gray-800">{msg.text}</span>;
+        return <span className="text-gray-800 text-lg">{msg.message}</span>;
       case "LEAVE":
         return (
-          <span className="text-red-600 text-center">
-            {msg.sender + " has leaved the chat"}
+          <span className="text-red-600 text-center text-lg">
+            {msg.sender + " has left the chat"}
           </span>
         );
-      case "EXIT":
-        return <span className="text-yellow-600">{msg.text}</span>;
       default:
         return null;
     }
@@ -59,17 +49,17 @@ const ChatMessageCard: React.FC<ChatMessageProps> = ({ msg }) => {
       {isChatMessage && (
         <div className="flex flex-col justify-center">
           <div className="h-12 w-12 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-700 text-white font-semibold uppercase shadow-md border-2 border-white">
-            {msg.sender.charAt(0)}
+            {msg.sender.substring(0, 3)}
           </div>
         </div>
       )}
       <div className="max-w-sm bg-white px-4 py-3 rounded-xl shadow-lg border border-gray-200">
-        <p className="text-gray-800 leading-relaxed break-words whitespace-pre-wrap">
+        <p className="text-gray-800 leading-relaxed break-words whitespace-pre-wrap text-lg">
           {renderMessageContent()}
         </p>
         {isChatMessage && (
           <span className="block mt-2 text-xs text-gray-500 text-right">
-            {FormatChatDate(msg.datetime)}
+            {FormatChatDate(msg.timestamp)}
           </span>
         )}
       </div>

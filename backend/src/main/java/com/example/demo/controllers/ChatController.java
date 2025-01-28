@@ -2,16 +2,20 @@ package com.example.demo.controllers;
 
 import com.example.demo.dtos.CreateChatMessageBody;
 import com.example.demo.models.ChatMessage;
+import com.example.demo.models.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDateTime;
 
 @Controller
+@RequiredArgsConstructor
 public class ChatController {
-
+    private final SimpMessageSendingOperations messageSendingOperations;
     public ChatMessage createChatMessage(CreateChatMessageBody createChatMessageBody) {
         return ChatMessage.builder()
                 .message(createChatMessageBody.getMessage())
@@ -30,7 +34,9 @@ public class ChatController {
     @MessageMapping("/chat/addUser")
     @SendTo("/topic/room")
     public ChatMessage addUser(CreateChatMessageBody createChatMessageBody, SimpMessageHeaderAccessor headerAccessor) {
-        headerAccessor.getSessionAttributes().put("username", createChatMessageBody.getSender());
-        return sendMessage(createChatMessageBody);
+        String username = createChatMessageBody.getSender();
+        headerAccessor.getSessionAttributes().put("username", username);
+        messageSendingOperations.convertAndSendToUser(username,"/topic/user", new User(username));
+        return createChatMessage(createChatMessageBody);
     }
 }

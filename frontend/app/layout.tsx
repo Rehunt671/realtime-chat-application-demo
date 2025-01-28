@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import { Provider as ReduxProvider } from "react-redux";
 import store from "@/stores/store";
+import WebSocketProvider from "@/providers/WebsocketProvider";
 interface RootLayoutProps {
   children: React.ReactNode;
 }
@@ -17,8 +18,10 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
     <html lang="en">
       <body>
         <ReduxProvider store={store}>
-          {!isJoinPageOrRootPage && <Navbar />}
-          <main>{children}</main>
+          <WebSocketProvider>
+            {!isJoinPageOrRootPage && <Navbar />}
+            <main>{children}</main>
+          </WebSocketProvider>
         </ReduxProvider>
       </body>
     </html>

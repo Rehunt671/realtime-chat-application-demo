@@ -1,7 +1,7 @@
 export interface ChatMessage {
   type: "JOIN" | "CHAT" | "LEAVE";
   id: number;
-  text: string;
+  message: string;
   sender: string;
-  datetime: Date;
+  timestamp: Date;
 }

@@ -14,6 +14,12 @@ export const useWebSocket = () => {
   const { client, isConnected } = useAppSelector(selectWebsocket);
   const serverUrl = process.env.API_BASE_URL;
 
+  const subscribe = (destination: string, callback: (payload: Stomp.Message) => void) => { 
+    if (client && isConnected) {
+      client.subscribe(destination, callback);
+    }
+  }
+
   const sendMessage = (destination: string, message: any) => {
     if (client && isConnected) {
       console.log("send", JSON.stringify(message));
@@ -21,11 +27,11 @@ export const useWebSocket = () => {
     }
   };
 
-  const connect = (username: string) => {
+  const connect = () => {
     try {
       const socket = new SockJS(`${serverUrl}/ws`);
       const stompClient = Stomp.over(socket);
-      stompClient.connect({}, () => onConnected(stompClient, username));
+      stompClient.connect({}, () => onConnected(stompClient));
       stompClient.debug = () => {};
     } catch (e) {
       console.log(e);
@@ -44,22 +50,17 @@ export const useWebSocket = () => {
     }
   };
 
-  const onConnected = (stompClient: Stomp.Client, username: string) => {
-    console.log("websocket connected successfuly");
+  const onConnected = (stompClient: Stomp.Client) => {
+    console.log("websocket connected successfuly"); 
     stompClient.subscribe(`/topic/room`, onUpdateRoom);
-    sendMessage(`/chat/addUser`, {
-      sender: username,
-      message: `${username} has joined the chat`,
-      type: "JOIN",
-    });
     dispatch(setWebSocketClient(stompClient));
     dispatch(setConnectionStatus(true));
   };
 
   const onUpdateRoom = (payload: Stomp.Message) => {
-    const messageObject = JSON.parse(payload.body);
-    console.log("messageObject", messageObject);
-    dispatch(addMessageToRoom(messageObject));
+    const newMessageObject = JSON.parse(payload.body);
+    console.log("newMessageObject", newMessageObject);
+    dispatch(addMessageToRoom(newMessageObject));
   };
 
   return {
@@ -67,5 +68,6 @@ export const useWebSocket = () => {
     disconnect,
     isConnected,
     sendMessage,
+    subscribe,
   };
 };
