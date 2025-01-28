@@ -8,7 +8,6 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
-
 import java.time.LocalDateTime;
 
 @Component
@@ -22,7 +21,7 @@ public class WebSocketEventListener {
         String username = (String) headerAccessor.getSessionAttributes().get("username");
         if (username != null) {
             ChatMessage chatMessage = ChatMessage.builder()
-                    .message(username + " has left the chat!")
+                    .message(username + " has left the chat.")
                     .type(MessageType.LEAVE)
                     .sender(username)
                     .timestamp(LocalDateTime.now())
