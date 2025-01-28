@@ -8,7 +8,7 @@ import Stomp from "stompjs";
 
 const JoinPage: React.FC = () => {
   const dispatch = useDispatch();
-  const { sendMessage ,subscribe  } = useWebSocket()
+  const {sendMessage,subscribe} = useWebSocket()
   const [username, setUsername] = useState<string>("");
   const [error, setError] = useState<string>("");
 
@@ -26,12 +26,12 @@ const JoinPage: React.FC = () => {
     } else {
       setError("");
       try {
+        subscribe(`/user/${username}/`, onUserConnected);
         sendMessage(`/chat/addUser`, {
             sender: username,
             message: `${username} has joined the chat!`,
-            type: "JOIN",
-          });
-        subscribe(`/user/${username}/topic/user`, onUserConnected);
+            type: "JOIN",// to enum
+        });
       } catch (error) {
         setError("Join failed. Please try again.");
       }

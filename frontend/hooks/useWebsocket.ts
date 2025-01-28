@@ -17,6 +17,8 @@ export const useWebSocket = () => {
   const subscribe = (destination: string, callback: (payload: Stomp.Message) => void) => { 
     if (client && isConnected) {
       client.subscribe(destination, callback);
+    } else {
+      console.log("No active WebSocket connection to disconnect.");
     }
   }
 
@@ -24,13 +26,15 @@ export const useWebSocket = () => {
     if (client && isConnected) {
       console.log("send", JSON.stringify(message));
       client.send(`/app${destination}`, {}, JSON.stringify(message));
+    } else {
+      console.log("No active WebSocket connection to disconnect.");
     }
   };
 
   const connect = () => {
     try {
-      const socket = new SockJS(`${serverUrl}/ws`);
-      const stompClient = Stomp.over(socket);
+      const webSocket = new SockJS(`${serverUrl}/ws`);
+      const stompClient = Stomp.over(webSocket);
       stompClient.connect({}, () => onConnected(stompClient));
       stompClient.debug = () => {};
     } catch (e) {
@@ -41,32 +45,31 @@ export const useWebSocket = () => {
   const disconnect = () => {
     if (client && isConnected) {
       client.disconnect(() => {
-        console.log("WebSocket disconnected");
-        dispatch(setConnectionStatus(false));
         dispatch(setWebSocketClient(null));
+        dispatch(setConnectionStatus(false));
       });
+      console.log("WebSocket disconnected");
     } else {
       console.log("No active WebSocket connection to disconnect.");
     }
   };
 
   const onConnected = (stompClient: Stomp.Client) => {
-    console.log("websocket connected successfuly"); 
     stompClient.subscribe(`/topic/room`, onUpdateRoom);
     dispatch(setWebSocketClient(stompClient));
     dispatch(setConnectionStatus(true));
+    console.log("WebSocket connected successfully"); 
   };
 
   const onUpdateRoom = (payload: Stomp.Message) => {
     const newMessageObject = JSON.parse(payload.body);
-    console.log("newMessageObject", newMessageObject);
     dispatch(addMessageToRoom(newMessageObject));
+    console.log("Receive new message object", newMessageObject);
   };
 
   return {
     connect,
     disconnect,
-    isConnected,
     sendMessage,
     subscribe,
   };

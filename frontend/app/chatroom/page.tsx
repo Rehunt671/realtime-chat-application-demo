@@ -1,5 +1,4 @@
 "use client";
-import LoadingSpinner from "@/components/LoadingSpinner";
 import { useEffect, useState, useRef } from "react";
 import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
 import { useWebSocket } from "@/hooks/useWebsocket";
@@ -8,7 +7,6 @@ import { selectUser } from "@/stores/slices/userSlice";
 import ChatMessageCard from "@/components/ChatMessage";
 import { selectRoom } from "@/stores/slices/roomSlice";
 import { redirect } from "next/navigation";
-import Navbar from "@/components/Navbar"; // Import the Navbar component
 
 const ChatRoom: React.FC = () => {
   const { sendMessage } = useWebSocket();
