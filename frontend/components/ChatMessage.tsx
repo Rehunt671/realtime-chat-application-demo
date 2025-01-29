@@ -16,7 +16,7 @@ const ChatMessageCard: React.FC<ChatMessageProps> = ({ msg }) => {
       case "JOIN":
         return (
           <span className="text-indigo-600 text-center text-lg">
-            {msg.sender + " has joined the chat"}.
+            {msg.message}
           </span>
         );
       case "CHAT":
@@ -24,7 +24,7 @@ const ChatMessageCard: React.FC<ChatMessageProps> = ({ msg }) => {
       case "LEAVE":
         return (
           <span className="text-red-600 text-center text-lg">
-            {msg.sender + " has left the chat"}
+            {msg.message}
           </span>
         );
       default:

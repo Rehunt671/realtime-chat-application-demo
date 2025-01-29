@@ -1,6 +1,7 @@
 "use client";
 import { useWebSocket } from "@/hooks/useWebsocket";
 import { setUser } from "@/stores/slices/userSlice";
+import { MessageType } from "@/types/message_type";
 import { redirect } from "next/navigation";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -26,11 +27,11 @@ const JoinPage: React.FC = () => {
     } else {
       setError("");
       try {
-        subscribe(`/user/${username}/`, onUserConnected);
+        subscribe(`/user/${username}/connected`, onUserConnected);
         sendMessage(`/chat/addUser`, {
             sender: username,
-            message: `${username} has joined the chat!`,
-            type: "JOIN",// to enum
+            message: `${username} has joined the chat.`,
+            type: MessageType.JOIN,
         });
       } catch (error) {
         setError("Join failed. Please try again.");

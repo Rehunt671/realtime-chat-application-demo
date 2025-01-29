@@ -7,6 +7,7 @@ import { selectUser } from "@/stores/slices/userSlice";
 import ChatMessageCard from "@/components/ChatMessage";
 import { selectRoom } from "@/stores/slices/roomSlice";
 import { redirect } from "next/navigation";
+import { MessageType } from "@/types/message_type";
 
 const ChatRoom: React.FC = () => {
   const { sendMessage } = useWebSocket();
@@ -28,7 +29,7 @@ const ChatRoom: React.FC = () => {
     sendMessage("/chat/sendMessage", {
       sender: user?.username,
       message: newMessage,
-      type: "CHAT",
+      type: MessageType.CHAT,
     });
     setNewMessage("");
   };

@@ -55,7 +55,7 @@ export const useWebSocket = () => {
   };
 
   const onConnected = (stompClient: Stomp.Client) => {
-    stompClient.subscribe(`/topic/room`, onUpdateRoom);
+    stompClient.subscribe(`/topic/messages`, onUpdateRoom);
     dispatch(setWebSocketClient(stompClient));
     dispatch(setConnectionStatus(true));
     console.log("WebSocket connected successfully"); 
