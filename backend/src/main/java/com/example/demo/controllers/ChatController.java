@@ -36,7 +36,7 @@ public class ChatController {
     public ChatMessage addUser(CreateChatMessageBody createChatMessageBody, SimpMessageHeaderAccessor headerAccessor) {
         String username = createChatMessageBody.getSender();
         headerAccessor.getSessionAttributes().put("username", username);
-        this.messageSendingOperations.convertAndSendToUser(username,"/connected", new User(username));
+        messageSendingOperations.convertAndSendToUser(username,"/connected", new User(username));
         return createChatMessage(createChatMessageBody);
     }
 }
