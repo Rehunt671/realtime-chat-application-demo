@@ -18,11 +18,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        // Enables a simple in-memory message broker and configures destination prefixes for it
-        registry.enableSimpleBroker("/topic", "/user");
-        // Sets the prefix for destinations targeting application annotated methods (e.g., @MessageMapping)
-        registry.setApplicationDestinationPrefixes("/app");
-        // Sets the prefix for user-specific messages
+        // Prefixes of the destinations that clients can subscribe to /topic or /user (e.g. http://localhost:8080/topic/messages).
+        registry.enableSimpleBroker( "/topic", "/user");
+        // /user: Used for sending messages to individual users (e.g., via @SendToUser). (e.g. http://localhost:8080/user/{user_id}/connected).
         registry.setUserDestinationPrefix("/user");
+        // /app: Used for client-to-server requests (e.g., sending messages via @MessageMapping) (e.g. http://localhost:8080/app/chat/sendMessage).
+        registry.setApplicationDestinationPrefixes("/app");
+
     }
 }

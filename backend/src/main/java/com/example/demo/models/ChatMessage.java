@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class ChatMessage {
-    public String message;
-    public String sender;
-    public MessageType type;
-    public LocalDateTime timestamp;
+    private String message;
+    private String sender;
+    private MessageType type;
+    private LocalDateTime timestamp;
 }
