@@ -9,7 +9,7 @@ import Stomp from "stompjs";
 
 const JoinPage: React.FC = () => {
   const dispatch = useDispatch();
-  const {sendMessage,subscribe} = useWebSocket()
+  const {sendMessage , subscribe } = useWebSocket()
   const [username, setUsername] = useState<string>("");
   const [error, setError] = useState<string>("");
 

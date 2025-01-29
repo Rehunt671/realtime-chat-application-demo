@@ -17,6 +17,7 @@ export const useWebSocket = () => {
   const subscribe = (destination: string, callback: (payload: Stomp.Message) => void) => { 
     if (client && isConnected) {
       client.subscribe(destination, callback);
+      console.log(`Subscribed to ${destination}`);
     } else {
       console.log("No active WebSocket connection to disconnect.");
     }
