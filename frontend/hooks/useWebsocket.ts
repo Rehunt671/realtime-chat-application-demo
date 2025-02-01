@@ -34,7 +34,7 @@ export const useWebSocket = () => {
 
   const connect = () => {
     try {
-      const webSocket = new SockJS(`${serverUrl}/ws`);
+      const webSocket = new SockJS(`http://localhost:8080/ws`);
       const stompClient = Stomp.over(webSocket);
       stompClient.connect({}, () => onConnected(stompClient));
       stompClient.debug = () => {};

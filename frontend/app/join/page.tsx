@@ -15,7 +15,7 @@ const JoinPage: React.FC = () => {
 
   const onUserConnected = (payload: Stomp.Message) => {
     const userObject = JSON.parse(payload.body);
-    console.log("userObject", userObject);
+    console.log("Receive new message user object", userObject);
     dispatch(setUser(userObject));
     redirect("/chatroom");
   };
@@ -27,7 +27,7 @@ const JoinPage: React.FC = () => {
     } else {
       setError("");
       try {
-        subscribe(`/user/${username}/connected`, onUserConnected);
+        subscribe(`/user/queue/connected`, onUserConnected);
         sendMessage(`/chat/addUser`, {
             sender: username,
             message: `${username} has joined the chat.`,
