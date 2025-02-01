@@ -37,12 +37,15 @@ const ChatRoom: React.FC = () => {
   if (!user || !room) redirect("/");
 
   return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-16"> 
-        <div className="w-full max-w-5xl space-y-8 bg-white shadow-lg rounded-lg p-8 border border-gray-200">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-4xl font-semibold text-gradient bg-clip-text bg-gradient-to-r from-blue-500 to-teal-500 mx-auto">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-20"> 
+        <div className="w-full max-w-5xl space-y-2 bg-white shadow-lg rounded-lg p-8 border border-gray-200">
+          <div className="flex items-center justify-between py-4 px-6 bg-gradient-to-r from-blue-200 to-teal-200 rounded-lg shadow-lg">
+            <h2 className="text-4xl font-semibold text-gradient bg-clip-text bg-gradient-to-r from-blue-500 to-teal-500">
               Chat Room
             </h2>
+            <div className="text-xl font-medium text-gray-700">
+              Number of players: <span className="text-teal-500 font-semibold">{/*add number of user*/}</span>
+            </div>
           </div>
 
           <div
