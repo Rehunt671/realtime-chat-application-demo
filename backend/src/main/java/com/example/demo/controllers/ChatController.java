@@ -3,18 +3,20 @@ import com.example.demo.dtos.CreateChatMessageBody;
 import com.example.demo.models.ChatMessage;
 import com.example.demo.models.User;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
+
 import java.time.LocalDateTime;
+
 @Controller
 @AllArgsConstructor
 public class ChatController {
-    private SimpMessageSendingOperations messageSendingOperations;
+    //Abstraction for sending messages to WebSocket clients
+    private final SimpMessageSendingOperations messageSendingOperations;
 
     public ChatMessage createChatMessage(CreateChatMessageBody createChatMessageBody) {
         return ChatMessage.builder()
@@ -32,11 +34,11 @@ public class ChatController {
     }
 
     @MessageMapping("/chat/addUser")
-    @SendTo("/topic/messages")
-    public ChatMessage addUser(CreateChatMessageBody createChatMessageBody, SimpMessageHeaderAccessor headerAccessor) {
+    @SendToUser("/queue/connected")
+    public User addUser(CreateChatMessageBody createChatMessageBody, SimpMessageHeaderAccessor headerAccessor) {
         String username = createChatMessageBody.getSender();
         headerAccessor.getSessionAttributes().put("username", username);
-        messageSendingOperations.convertAndSendToUser(username,"/connected", new User(username));
-        return createChatMessage(createChatMessageBody);
+        messageSendingOperations.convertAndSend("/topic/messages", createChatMessage(createChatMessageBody));
+        return new User(username);
     }
 }
