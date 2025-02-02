@@ -35,8 +35,13 @@ const ChatRoom: React.FC = () => {
     setNewMessage("");
   };
 
-  if (!user || !room) router.push("/");
+  useEffect(() => {
+    if (!user || !room) {
+      router.push("/");
+    }
+  }, [user, room, router]);
 
+  
   return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-20"> 
         <div className="w-full max-w-5xl space-y-2 bg-white shadow-lg rounded-lg p-8 border border-gray-200">
