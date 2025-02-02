@@ -9,7 +9,8 @@ import Stomp from "stompjs";
 
 const JoinPage: React.FC = () => {
   const dispatch = useDispatch();
-  const {sendMessage , subscribe } = useWebSocket()
+  const {sendMessage , subscribe , unsubscribe} = useWebSocket()
+  const [userSubscription , setUserSubscription] = useState<Stomp.Subscription>();
   const [username, setUsername] = useState<string>("");
   const [error, setError] = useState<string>("");
 
@@ -17,6 +18,7 @@ const JoinPage: React.FC = () => {
     const userObject = JSON.parse(payload.body);
     console.log("Receive new message user object", userObject);
     dispatch(setUser(userObject));
+    unsubscribe(userSubscription);
     redirect("/chatroom");
   };
 
@@ -27,7 +29,7 @@ const JoinPage: React.FC = () => {
     } else {
       setError("");
       try {
-        subscribe(`/user/queue/connected`, onUserConnected);
+        setUserSubscription(subscribe(`/user/queue/connected`, onUserConnected));
         sendMessage(`/chat/addUser`, {
             sender: username,
             message: `${username} has joined the chat.`,

@@ -14,15 +14,24 @@ export const useWebSocket = () => {
   const { client, isConnected } = useAppSelector(selectWebsocket);
   const serverUrl = process.env.API_BASE_URL;
 
-  const subscribe = (destination: string, callback: (payload: Stomp.Message) => void) => { 
+  const subscribe = (destination: string, callback: (payload: Stomp.Message) => Stomp.Subscription) => { 
     if (client && isConnected) {
-      client.subscribe(destination, callback);
+      const subscription = client.subscribe(destination, callback);
       console.log(`Subscribed to ${destination}`);
+      return subscription;
     } else {
       console.log("No active WebSocket connection to disconnect.");
     }
   }
 
+  const unsubscribe = (subscription: Stomp.Subscription | undefined) => { 
+    if (subscription) {
+      subscription.unsubscribe();
+    } else {
+      console.log("No active WebSocket connection to disconnect.");
+    }
+  }
+  
   const sendMessage = (destination: string, message: any) => {
     if (client && isConnected) {
       console.log("send", JSON.stringify(message));
@@ -73,5 +82,6 @@ export const useWebSocket = () => {
     disconnect,
     sendMessage,
     subscribe,
+    unsubscribe,
   };
 };
