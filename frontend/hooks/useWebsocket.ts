@@ -22,11 +22,11 @@ export const useWebSocket = () => {
     } else {
       console.log("No active WebSocket connection to disconnect.");
     }
-  }
+  } 
 
-  const unsubscribe = (subscription: Stomp.Subscription | undefined) => { 
-    if (subscription) {
-      subscription.unsubscribe();
+  const unsubscribe = (subscription: Stomp.Subscription| undefined) => { 
+    if (client && isConnected && subscription) {
+      client.unsubscribe(subscription.id);
       console.log(`Unsubscribed from ${subscription.id}`);
     } else {
       console.log("No active WebSocket connection to disconnect.");

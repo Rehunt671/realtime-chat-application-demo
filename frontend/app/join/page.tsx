@@ -1,16 +1,16 @@
-"use client";
+'use client'
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import Stomp from "stompjs";
 import { useWebSocket } from "@/hooks/useWebsocket";
 import { setUser } from "@/stores/slices/userSlice";
 import { MessageType } from "@/types/message_type";
 import { redirect } from "next/navigation";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import Stomp from "stompjs";
 
 const JoinPage: React.FC = () => {
   const dispatch = useDispatch();
-  const {sendMessage , subscribe , unsubscribe} = useWebSocket()
-  const [userSubscription , setUserSubscription] = useState<Stomp.Subscription>();
+  const { sendMessage, subscribe, unsubscribe } = useWebSocket();
+  const [userSubscription, setUserSubscription] = useState<Stomp.Subscription | undefined>();
   const [username, setUsername] = useState<string>("");
   const [error, setError] = useState<string>("");
 
@@ -18,9 +18,17 @@ const JoinPage: React.FC = () => {
     const userObject = JSON.parse(payload.body);
     console.log("Receive new message user object", userObject);
     dispatch(setUser(userObject));
-    unsubscribe(userSubscription);
     redirect("/chatroom");
   };
+
+  useEffect(() => {
+    setUserSubscription(userSubscription);
+    return(()=>{
+      if(userSubscription){
+        unsubscribe(userSubscription)
+      }
+    })
+  }, [userSubscription]);
 
   const handleJoin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,11 +37,12 @@ const JoinPage: React.FC = () => {
     } else {
       setError("");
       try {
-        setUserSubscription(subscribe(`/user/queue/connected`, onUserConnected));
+        const subscription = subscribe(`/user/queue/connected`, onUserConnected);
+        setUserSubscription(subscription);
         sendMessage(`/chat/addUser`, {
-            sender: username,
-            message: `${username} has joined the chat.`,
-            type: MessageType.JOIN,
+          sender: username,
+          message: `${username} has joined the chat.`,
+          type: MessageType.JOIN,
         });
       } catch (error) {
         setError("Join failed. Please try again.");
