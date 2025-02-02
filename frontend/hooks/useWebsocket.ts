@@ -14,7 +14,7 @@ export const useWebSocket = () => {
   const { client, isConnected } = useAppSelector(selectWebsocket);
   const serverUrl = process.env.API_BASE_URL;
 
-  const subscribe = (destination: string, callback: (payload: Stomp.Message) => Stomp.Subscription) => { 
+  const subscribe = (destination: string, callback: (payload: Stomp.Message) => void) => { 
     if (client && isConnected) {
       const subscription = client.subscribe(destination, callback);
       console.log(`Subscribed to ${destination}`);

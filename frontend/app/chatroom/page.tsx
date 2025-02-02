@@ -6,10 +6,11 @@ import { useAppSelector } from "@/stores/hook";
 import { selectUser } from "@/stores/slices/userSlice";
 import ChatMessageCard from "@/components/ChatMessage";
 import { selectRoom } from "@/stores/slices/roomSlice";
-import { redirect } from "next/navigation";
 import { MessageType } from "@/types/message_type";
+import { useRouter } from "next/navigation";
 
 const ChatRoom: React.FC = () => {
+  const router = useRouter()
   const { sendMessage } = useWebSocket();
   const [newMessage, setNewMessage] = useState<string>("");
   const user = useAppSelector(selectUser);
@@ -34,7 +35,7 @@ const ChatRoom: React.FC = () => {
     setNewMessage("");
   };
 
-  if (!user || !room) redirect("/");
+  if (!user || !room) router.push("/");
 
   return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-20"> 

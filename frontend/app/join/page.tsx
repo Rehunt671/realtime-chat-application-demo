@@ -5,20 +5,21 @@ import Stomp from "stompjs";
 import { useWebSocket } from "@/hooks/useWebsocket";
 import { setUser } from "@/stores/slices/userSlice";
 import { MessageType } from "@/types/message_type";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const JoinPage: React.FC = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const { sendMessage, subscribe, unsubscribe } = useWebSocket();
-  const [userSubscription, setUserSubscription] = useState<Stomp.Subscription | undefined>();
+  const [userSubscription, setUserSubscription] = useState<Stomp.Subscription>();
   const [username, setUsername] = useState<string>("");
   const [error, setError] = useState<string>("");
 
-  const onUserConnected = (payload: Stomp.Message) => {
+  const onUserConnected = (payload: Stomp.Message) =>  {
     const userObject = JSON.parse(payload.body);
     console.log("Receive new message user object", userObject);
     dispatch(setUser(userObject));
-    redirect("/chatroom");
+    router.push("/chatroom");
   };
 
   useEffect(() => {
