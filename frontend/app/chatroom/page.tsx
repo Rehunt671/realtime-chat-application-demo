@@ -44,9 +44,6 @@ const ChatRoom: React.FC = () => {
             <h2 className="text-4xl font-semibold text-gradient bg-clip-text bg-gradient-to-r from-blue-500 to-teal-500">
               Chat Room
             </h2>
-            <div className="text-xl font-medium text-gray-700">
-              Number of players: <span className="text-teal-500 font-semibold">{/*add number of user*/}</span>
-            </div>
           </div>
 
           <div

@@ -12,40 +12,30 @@ const ChatMessageCard: React.FC<ChatMessageProps> = ({ msg }) => {
   const user = useAppSelector(selectUser);
 
   const renderMessageContent = () => {
-    switch (msg.type) {
-      case "JOIN":
-        return (
-          <span className="text-indigo-600 text-center text-lg">
-            {msg.message}
-          </span>
-        );
-      case "CHAT":
-        return <span className="text-gray-800 text-lg">{msg.message}</span>;
-      case "LEAVE":
-        return (
-          <span className="text-red-600 text-center text-lg">
-            {msg.message}
-          </span>
-        );
-      default:
-        return null;
-    }
+    const messageStyles = {
+      JOIN: "text-indigo-600 text-center text-lg",
+      CHAT: "text-gray-800 text-lg",
+      LEAVE: "text-red-600 text-center text-lg",
+    };
+
+    return (
+      <span className={messageStyles[msg.type] || ""}>
+        {msg.message}
+      </span>
+    );
   };
 
   const isMessageFromCurrentUser = msg.sender === user?.username;
-  const isChatMessage = ["CHAT"].includes(msg.type);
+  const isChatMessage = msg.type === "CHAT";
 
-  const itemAlignment = !isChatMessage
-    ? "justify-center"
-    : isMessageFromCurrentUser
-    ? "justify-end"
-    : "justify-start";
+  const itemAlignment = isChatMessage
+    ? isMessageFromCurrentUser
+      ? "justify-end"
+      : "justify-start"
+    : "justify-center";
 
   return (
-    <div
-      key={msg.id}
-      className={`${itemAlignment} flex items-start space-x-3 p-2`}
-    >
+    <div key={msg.id} className={`${itemAlignment} flex items-start space-x-3 p-2`}>
       {isChatMessage && (
         <div className="flex flex-col justify-center">
           <div className="h-12 w-12 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-700 text-white font-semibold uppercase shadow-md border-2 border-white">
