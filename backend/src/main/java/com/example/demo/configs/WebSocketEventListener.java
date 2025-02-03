@@ -19,13 +19,7 @@ public class WebSocketEventListener {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String username = (String) headerAccessor.getSessionAttributes().get("username");
         if (username != null) {
-            ChatMessage chatMessage = ChatMessage.builder()
-                    .message(username + " has left the chat.")
-                    .type(MessageType.LEAVE)
-                    .sender(username)
-                    .timestamp(LocalDateTime.now())
-                    .build();
-
+            ChatMessage chatMessage = ChatMessage.buildChatMessage(username + " has left the chat.", username , MessageType.LEAVE);
             messageSendingOperations.convertAndSend("/topic/messages", chatMessage);
         }
     }
